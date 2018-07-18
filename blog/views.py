@@ -57,7 +57,6 @@ def post_model_update_view(request, id=None):
     obj = get_object_or_404(PostModel, id=id)
     form = PostModelForm(request.POST or None, instance=obj)
     context = {
-        "obj": obj,
         "form": form
     }
     if form.is_valid():
