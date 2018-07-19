@@ -45,7 +45,12 @@ def post_model_robust_view(request, id=None):
 
 # @login_required(login_url='/login/')
 def post_model_list_view(request):
+    # query = request.GET["q"]
+    query = request.GET.get('q', None)
     qs = PostModel.objects.all()
+
+    if query is not None:
+        qs = qs.filter(title__icontains=query)
 
     template = 'blog/list-view.html'
     context = { 'object_list': qs }
