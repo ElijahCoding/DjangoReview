@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import PostModel
 from .forms import PostModelForm
 from django.contrib import messages
+from django.db.models import Q
 
 # Create your views here.
 def post_model_robust_view(request, id=None):
@@ -50,7 +51,11 @@ def post_model_list_view(request):
     qs = PostModel.objects.all()
 
     if query is not None:
-        qs = qs.filter(title__icontains=query)
+        qs = qs.filter(
+            Q(title__icontains=query) |
+            Q(slug__icontains=query) |
+            Q(content__icontains=query)
+        )
 
     template = 'blog/list-view.html'
     context = { 'object_list': qs }
