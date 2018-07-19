@@ -3,4 +3,5 @@ from django.db.models import Model
 
 # Create your models here.
 class PostModel(Model):
-    pass
+    id = models.AutoField(primary_key=True)
+    active = models.BooleanField(default=True)
