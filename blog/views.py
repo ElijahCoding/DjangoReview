@@ -19,7 +19,7 @@ def post_model_robust_view(request, id=None):
         success_message = 'a new post was created'
         context["object"] = obj
         template = 'blog/detail-view.html'
-        if "edit" is in request.get_full_path():
+        if "edit" in request.get_full_path():
             template = 'blog/update-view.html'
 
     if "delete" in request.get_full_path():
