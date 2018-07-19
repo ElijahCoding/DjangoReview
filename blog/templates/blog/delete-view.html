@@ -1,6 +1,7 @@
 <h1>Delete {{ object.title }}?</h1>
 
-<form method="POST" action="">
+<form method="POST" action=".">
+    {% csrf_token %}
     <input type="submit" value="Delete">
 
     <a href="/blog/{{ object.id }}">Cancle</a>

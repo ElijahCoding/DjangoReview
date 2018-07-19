@@ -6,6 +6,42 @@ from .forms import PostModelForm
 from django.contrib import messages
 
 # Create your views here.
+def post_model_robust_view(request, id=None):
+    obj = none
+    context = {}
+    success_message = 'A new post was created'
+
+    if id is None:
+        template = 'blog/create-view.html'
+
+    if id is not None:
+        obj = get_object_or_404(PostModel, id=id)
+        success_message = 'a new post was created'
+        context["object"] = obj
+        template = 'blog/detail-view.html'
+        if "edit" is in request.get_full_path():
+            template = 'blog/update-view.html'
+
+    if "delete" in request.get_full_path():
+        template = "blog/delete-view.html"
+        if request.method == 'POST':
+            obj.delete()
+            messages.success(request, 'Post deleted')
+            return HttpResponseRedirect('/blog/')
+
+
+    if "edit" in request.get_full_path() or "create" in request.get_full_path():
+        form = PostModelForm(request.Post or None, instance=obj)
+        context['form'] = form
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request, success_message)
+            if obj is not None:
+                return HttpResponseRedirect("/blog/{num}".format(obj.id))
+            context['form'] = PostModelForm
+    return render(request, template, context)
+
 
 # @login_required(login_url='/login/')
 def post_model_list_view(request):
