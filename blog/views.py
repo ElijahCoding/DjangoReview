@@ -66,3 +66,16 @@ def post_model_update_view(request, id=None):
         return HttpResponseRedirect("/blog/{num}".format(num=obj.id))
     template = 'blog/update-view.html'
     return render(request, template, context)
+
+
+def post_model_delete_view(request, id=None):
+    obj = get_object_or_404(PostModel, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, 'post deleted')
+        return HttpResponseRedirect("/blog/")
+    context = {
+        'object': obj
+    }
+    template = 'blog/delete-view.html'
+    return render(request, template, context)
