@@ -7,3 +7,7 @@ class PostModel(Model):
     active = models.BooleanField(default=True)
     title = models.CharField(max_length=240)
     content = models.TextField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
