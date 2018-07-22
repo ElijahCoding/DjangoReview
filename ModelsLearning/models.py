@@ -4,6 +4,7 @@ from django.utils.encoding import smart_text
 from django.utils import timezone
 from .validators import validate_author_email
 from django.utils.text import slugify
+from django.db.models.signals import pre_save, post_save
 
 
 PUBLISH_CHOICES = (
@@ -25,8 +26,8 @@ class PostModel(Model):
     author_email = models.EmailField(max_length=240, validators=[validate_author_email], null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug and self.title:
-            self.slug = slugify(self.title)
+        # if not self.slug and self.title:
+        #     self.slug = slugify(self.title)
         super(PostModel, self).save(*args, **kwargs)
 
     class Meta:
@@ -38,3 +39,13 @@ class PostModel(Model):
 
     def __str__(self):
         return smart_text(self.title)
+
+def post_model_pre_save_receiver():
+    pass
+
+def post_model_post_save_receiver(sender, instance, created, *args, **kwargs):
+    if not instance.slug and instance.title:
+        instance.slug = slugify(instance.title)
+        instance.save()
+
+post_save.connect(post_model_post_save_receiver, sender=PostModel)
