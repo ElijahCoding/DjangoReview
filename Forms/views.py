@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from .forms import SearchForm
 
 # Create your views here.
-def form_index(request):
-    template = 'test_form.html'
-    context = {}
+def home(request):
+    template = 'forms.html'
+    context = { 'form': SearchForm() }
     return render(request, template, context)
