@@ -14,6 +14,11 @@ PUBLISH_CHOICES = (
     ('private', 'Private')
 )
 
+class PostModelManager(models.Manager):
+    def all(self, *args, **kwargs):
+        qs = super(PostModelManager, self).all(*args, **kwargs).filter(active=True)
+        return qs
+
 # Create your models here.
 class PostModel(Model):
     id = models.AutoField(primary_key=True)
@@ -36,6 +41,8 @@ class PostModel(Model):
     author_email = models.EmailField(max_length=240, validators=[validate_author_email], null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    objects = PostModelManager()
 
     def save(self, *args, **kwargs):
         # if not self.slug and self.title:
