@@ -31,8 +31,10 @@ class PostModel(Model):
     content = models.TextField(null=True, blank=True)
     publish = models.CharField(max_length=120, choices=PUBLISH_CHOICES, default='draft')
     view_count = models.IntegerField(default=0)
-    publish_data = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    publish_date = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
     author_email = models.EmailField(max_length=240, validators=[validate_author_email], null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # if not self.slug and self.title:
