@@ -17,8 +17,17 @@ PUBLISH_CHOICES = (
 class PostModel(Model):
     id = models.AutoField(primary_key=True)
     active = models.BooleanField(default=True)
-    title = models.CharField(max_length=240, verbose_name='Post title', unique=True)
-    slug = models.SlugField(null=True, blank=True)
+    title = models.CharField(
+        max_length=240,
+        verbose_name='Post title',
+        unique=True,
+        error_messages={
+            'unique': 'This title is not unique',
+            'blank': 'This field is not full'
+        },
+        help_text='Must be a unique title'
+    )
+    slug = models.SlugField(null=True, blank=True, editable=False)
     content = models.TextField(null=True, blank=True)
     publish = models.CharField(max_length=120, choices=PUBLISH_CHOICES, default='draft')
     view_count = models.IntegerField(default=0)
