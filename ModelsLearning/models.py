@@ -40,12 +40,16 @@ class PostModel(Model):
     def __str__(self):
         return smart_text(self.title)
 
-def post_model_pre_save_receiver():
-    pass
-
-def post_model_post_save_receiver(sender, instance, created, *args, **kwargs):
+def post_model_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug and instance.title:
         instance.slug = slugify(instance.title)
-        instance.save()
+
+pre_save.connect(post_model_pre_save_receiver, sender=PostModel)
+
+def post_model_post_save_receiver(sender, instance, created, *args, **kwargs):
+    if created:
+        if not instance.slug and instance.title:
+            instance.slug = slugify(instance.title)
+            instance.save()
 
 post_save.connect(post_model_post_save_receiver, sender=PostModel)
