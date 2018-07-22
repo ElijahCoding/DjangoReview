@@ -5,7 +5,8 @@ from django.utils import timezone
 from .validators import validate_author_email
 from django.utils.text import slugify
 from django.db.models.signals import pre_save, post_save
-
+from django.utils.timesince import timesince
+from datetime import timedelta, datetime, date
 
 PUBLISH_CHOICES = (
     ('draft', 'Draft'),
@@ -50,6 +51,22 @@ class PostModel(Model):
 
     def __str__(self):
         return smart_text(self.title)
+
+    def age(self):
+        if self.publish == 'publish':
+            now = datetime.now()
+            publish_time = datetime.combine(
+                self.publish_date,
+                datetime.now().min.time()
+            )
+            try:
+                difference = now - publish_time
+            except:
+                return 'Unknown'
+            if difference <= timedelta(minutes=1):
+                return 'just now'
+            return '{time} ago'.format(time=timesince(publish_time)).split(', ')[0]
+        return 'Not published'
 
 def post_model_pre_save_receiver(sender, instance, *args, **kwargs):
     if not instance.slug and instance.title:
